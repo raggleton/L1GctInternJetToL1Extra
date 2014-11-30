@@ -58,7 +58,10 @@ class L1GctInternJetToL1Extra : public edm::EDProducer {
 
     private:
         virtual void produce(edm::Event&, const edm::EventSetup&) override;
-        math::PtEtaPhiMLorentzVector gctInternJetToLorentzVector(const L1GctInternJetData& gctJet, const L1CaloGeometry& geom, const L1CaloEtScale& scale);
+        math::PtEtaPhiMLorentzVector gctInternJetToLorentzVector(
+            const L1GctInternJetData& gctJet,
+            const L1CaloGeometry& geom,
+            const L1CaloEtScale& scale);
 
         // virtual void beginJob() override;
         // virtual void endJob() override;
@@ -233,7 +236,7 @@ L1GctInternJetToL1Extra::endLuminosityBlock(edm::LuminosityBlock const&, edm::Ev
 void
 L1GctInternJetToL1Extra::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   edm::ParameterSetDescription desc;
-  desc.add<std::string>("gctInternJetSource", "simGctdigis")->setComment("Name of module that produces L1GctInternJetDataCollection");
+  desc.add<edm::InputTag>("gctInternJetSource", edm::InputTag("simGctDigis"))->setComment("Name of module that produces L1GctInternJetDataCollection");
   descriptions.add("L1GctInternJetToL1Extra", desc);
 }
 
