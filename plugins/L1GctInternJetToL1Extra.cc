@@ -147,7 +147,7 @@ L1GctInternJetToL1Extra::produce(edm::Event& iEvent, const edm::EventSetup& iSet
     L1GctInternJetDataCollection::const_iterator gctEnd = hwGctInternJetCollection->end();
     for( ; gctItr != gctEnd ; ++gctItr) {
             if (!gctItr->empty() && (gctItr->et() != 0)){
-                cout << "Jet: " << gctItr->bx() << " : " << gctItr->rank() << " : " << gctItr->et() << " : "  << gctItr->eta() << " : " << gctItr->phi() << endl;
+                // cout << "Jet: " << gctItr->bx() << " : " << gctItr->rank() << " : " << gctItr->et() << " : "  << gctItr->eta() << " : " << gctItr->phi() << endl;
                 gctInternJetColl->push_back(
                     L1JetParticle(gctInternJetToLorentzVector(*gctItr, *caloGeom, *jetScale),
                                   L1JetParticle::JetType::kUndefined,
@@ -169,13 +169,16 @@ L1GctInternJetToL1Extra::produce(edm::Event& iEvent, const edm::EventSetup& iSet
  * @return PolarLorentzVector (aka math::PtEtaPhiMLorentzVector) to use in L1JetParticle ctor
  */
 math::PtEtaPhiMLorentzVector
-L1GctInternJetToL1Extra::gctInternJetToLorentzVector(const L1GctInternJetData& gctJet, const L1CaloGeometry& geom, const L1CaloEtScale& scale) {
+L1GctInternJetToL1Extra::gctInternJetToLorentzVector(const L1GctInternJetData& gctJet,
+                                                     const L1CaloGeometry& geom,
+                                                     const L1CaloEtScale& scale) {
     // double et = gctJet.rank() * 0.5;
-    double et = gctJet.rank() * scale.linearLsb();
-    double eta = geom.globalEtaBinCenter(gctJet.eta());
-    double phi = geom.emJetPhiBinCenter(gctJet.phi());
+    // double et = gctJet.rank() * scale.linearLsb();
+    double et = gctJet.et() * scale.linearLsb();
+    double eta = geom.etaBinCenter(gctJet.regionId());
+    double phi = geom.emJetPhiBinCenter(gctJet.regionId());
     double mass = 0.;
-    std::cout << et << " : "  << eta << " : " << phi << std::endl;
+    // std::cout << et << " : "  << eta << " : " << phi << std::endl;
     return math::PtEtaPhiMLorentzVector(et, eta, phi, mass);
 }
 
